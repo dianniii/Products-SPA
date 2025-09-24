@@ -1,13 +1,14 @@
 import '@/app/globals.css'
 import Footer from '@/components/common/footer'
 import Header from '@/components/common/header'
+import { SITE_NAME } from '@/constants/seo-constants'
 import { ProductsProvider } from '@/context/ProductsContext'
 
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 
 export const metadata: Metadata = {
-	title: 'Products-spa',
+	title: SITE_NAME,
 	description: 'Favorite products in one place'
 }
 

@@ -1,10 +1,15 @@
 import ProductDetailClient from '@/components/ProductDetailClient'
 import { Button } from '@/components/ui/button'
+import { SITE_NAME } from '@/constants/seo-constants'
 
 import { getProductById } from '@/service/api'
 import { ArrowLeft } from 'lucide-react'
+import { Metadata } from 'next'
 import Link from 'next/link'
 
+export const metadata: Metadata = {
+	title: `Product-card | ${SITE_NAME}`
+}
 interface PageProps {
 	params: Promise<{ id: string }>
 }
