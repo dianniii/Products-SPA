@@ -5,7 +5,7 @@ Products-SPA - приложение на Next/TypeScript, Tailwind/ShadcnUI с C
 публичного API DummyJSON, пользовательские товары создаются локально и хранятся
 в Context.
 
-Демо (GitHub Pages):
+Демо (Vercel): https://products-f9xgtd72a-dianniiis-projects.vercel.app/
 
 ## ✨ Функционал
 
@@ -47,16 +47,15 @@ npm run dev
 ```
 src/
   app/                # Created-card, Product-card/[id], layout.tsx, not-found.tsx, page.tsx
-  components/         # (common - header/footer),(ui-Card/Button/Skeleton/Input/paginator..)
+  components/         # (common - header/footer),(ui-Card/Button/Skeleton/Input/paginator..) CreatesProductPage, ProductDetailClient, ProductsPage
   constants/          # seo-constants
   context/            # ProductsContext
   hooks/              # useFavorite, useLocalStorage, useProduct, useProductCardActions...
   lib/                # utils
-  pages/              # CreatesProductPage, ProductDetailClient, ProductsPage
   service/            # api, localProducts
   types/              # products-types
 ```
 
 ## 🚢 Деплой
 
-- GitHub Pages: → `build`, `deploy`, `dist`.
+- Vercel 
