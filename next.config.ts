@@ -5,10 +5,9 @@ const nextConfig: NextConfig = {
 		remotePatterns: [
 			{
 				protocol: 'https',
-				hostname: '**' // Разрешает все домены
+				hostname: '**'
 			}
 		],
-		// Или используйте domains для более простой настройки:
 		domains: ['cdn.dummyjson.com']
 	}
 }

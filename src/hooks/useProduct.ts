@@ -34,8 +34,8 @@ export function useProduct(
 					throw new Error('Product not found')
 				}
 				setProduct(loadedProduct)
-			} catch (err) {
-				setError('Продукт не найден')
+			} catch {
+				console.error('Error fetching product')
 			}
 		}
 

@@ -57,7 +57,7 @@ export function useProductForm(): UseProductFormReturn {
 	} = useProducts()
 	const searchParams = useSearchParams()
 	const router = useRouter()
-	const editProductId = searchParams.get('edit')
+	const editProductId = searchParams?.get('edit') || null
 
 	const [isEditing, setIsEditing] = useState(false)
 	const [currentProduct, setCurrentProduct] = useState<Product | null>(null)

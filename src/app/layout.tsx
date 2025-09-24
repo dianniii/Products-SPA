@@ -1,8 +1,8 @@
 import '@/app/globals.css'
 import Footer from '@/components/common/footer'
 import Header from '@/components/common/header'
-
 import { ProductsProvider } from '@/context/ProductsContext'
+
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 

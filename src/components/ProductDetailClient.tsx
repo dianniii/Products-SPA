@@ -14,7 +14,7 @@ interface ProductDetailClientProps {
 	initialProduct?: Product | null
 }
 
-export function ProductDetailClient({
+export default function ProductDetailClient({
 	productId,
 	initialProduct
 }: ProductDetailClientProps) {

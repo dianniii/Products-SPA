@@ -1,9 +1,14 @@
 'use client'
 
-import React, { createContext, useContext, useEffect, useState } from 'react'
-
 import { getProducts } from '@/service/api'
 import { Product } from '@/types/produsts-types'
+import React, {
+	createContext,
+	useCallback,
+	useContext,
+	useEffect,
+	useState
+} from 'react'
 
 interface ProductsContextType {
 	products: Product[]
@@ -26,8 +31,10 @@ export function ProductsProvider({ children }: { children: React.ReactNode }) {
 	const [createdProducts, setCreatedProducts] = useState<Product[]>([])
 	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState<string | null>(null)
+	const [isMounted, setIsMounted] = useState(false)
 
-	const loadProducts = async () => {
+	// Используем useCallback для стабилизации функций
+	const loadProducts = useCallback(async () => {
 		try {
 			setLoading(true)
 			setError(null)
@@ -40,10 +47,11 @@ export function ProductsProvider({ children }: { children: React.ReactNode }) {
 		} finally {
 			setLoading(false)
 		}
-	}
+	}, [])
 
-	const loadCreatedProducts = () => {
-		if (typeof window === 'undefined') return
+	const loadCreatedProducts = useCallback(() => {
+		if (!isMounted) return
+
 		try {
 			const stored = localStorage.getItem('createdProducts')
 			if (stored) {
@@ -52,71 +60,112 @@ export function ProductsProvider({ children }: { children: React.ReactNode }) {
 		} catch (err) {
 			console.error('Error loading created products:', err)
 		}
-	}
+	}, [isMounted])
 
 	useEffect(() => {
-		loadProducts()
-		loadCreatedProducts()
+		setIsMounted(true)
 	}, [])
 
-	const toggleLike = (productId: number) => {
-		setProducts(prev =>
-			prev.map(product =>
-				product.id === productId
-					? { ...product, liked: !product.liked }
-					: product
-			)
-		)
-
-		setCreatedProducts(prev =>
-			prev.map(product =>
-				product.id === productId
-					? { ...product, liked: !product.liked }
-					: product
-			)
-		)
-	}
-
-	const addCreatedProduct = (productData: Omit<Product, 'id'>) => {
-		const newProduct: Product = {
-			...productData,
-			id: -Date.now(), // Уникальный отрицательный ID
-			liked: false
+	// Разделим useEffect на два, чтобы избежать циклических зависимостей
+	useEffect(() => {
+		if (isMounted) {
+			loadProducts()
+			loadCreatedProducts()
 		}
+	}, [isMounted, loadProducts, loadCreatedProducts])
 
-		setCreatedProducts(prev => {
-			const newProducts = [...prev, newProduct]
-			if (typeof window !== 'undefined') {
-				localStorage.setItem('createdProducts', JSON.stringify(newProducts))
-			}
-			return newProducts
-		})
-	}
+	const toggleLike = useCallback(
+		(productId: number) => {
+			if (!isMounted) return
 
-	const updateCreatedProduct = (updatedProduct: Product) => {
-		setCreatedProducts(prev => {
-			const updatedProducts = prev.map(product =>
-				product.id === updatedProduct.id ? updatedProduct : product
+			setProducts(prev =>
+				prev.map(product =>
+					product.id === productId
+						? { ...product, liked: !product.liked }
+						: product
+				)
 			)
-			if (typeof window !== 'undefined') {
-				localStorage.setItem('createdProducts', JSON.stringify(updatedProducts))
-			}
-			return updatedProducts
-		})
-	}
 
-	const removeCreatedProduct = (productId: number) => {
-		setCreatedProducts(prev => {
-			const updatedProducts = prev.filter(product => product.id !== productId)
-			if (typeof window !== 'undefined') {
-				localStorage.setItem('createdProducts', JSON.stringify(updatedProducts))
-			}
-			return updatedProducts
-		})
-	}
+			setCreatedProducts(prev =>
+				prev.map(product =>
+					product.id === productId
+						? { ...product, liked: !product.liked }
+						: product
+				)
+			)
+		},
+		[isMounted]
+	)
 
-	const refetchProducts = async () => {
+	const addCreatedProduct = useCallback(
+		(productData: Omit<Product, 'id'>) => {
+			if (!isMounted) return
+
+			const newProduct: Product = {
+				...productData,
+				id: -Date.now(),
+				liked: false
+			}
+
+			setCreatedProducts(prev => {
+				const newProducts = [...prev, newProduct]
+				localStorage.setItem('createdProducts', JSON.stringify(newProducts))
+				return newProducts
+			})
+		},
+		[isMounted]
+	)
+
+	const updateCreatedProduct = useCallback(
+		(updatedProduct: Product) => {
+			if (!isMounted) return
+
+			setCreatedProducts(prev => {
+				const updatedProducts = prev.map(product =>
+					product.id === updatedProduct.id ? updatedProduct : product
+				)
+				localStorage.setItem('createdProducts', JSON.stringify(updatedProducts))
+				return updatedProducts
+			})
+		},
+		[isMounted]
+	)
+
+	const removeCreatedProduct = useCallback(
+		(productId: number) => {
+			if (!isMounted) return
+
+			setCreatedProducts(prev => {
+				const updatedProducts = prev.filter(product => product.id !== productId)
+				localStorage.setItem('createdProducts', JSON.stringify(updatedProducts))
+				return updatedProducts
+			})
+		},
+		[isMounted]
+	)
+
+	const refetchProducts = useCallback(async () => {
 		await loadProducts()
+	}, [loadProducts])
+
+	if (!isMounted) {
+		return (
+			<ProductsContext.Provider
+				value={{
+					products: [],
+					createdProducts: [],
+					loading: true,
+					error: null,
+					toggleLike: () => {},
+					addCreatedProduct: () => {},
+					updateCreatedProduct: () => {},
+					removeCreatedProduct: () => {},
+					refetchProducts: async () => {}
+				}}
+			>
+				{children}
+			</ProductsContext.Provider>
+		)
 	}
 
 	return (

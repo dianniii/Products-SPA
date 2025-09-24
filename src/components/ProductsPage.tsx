@@ -7,10 +7,10 @@ import { SearchBar } from '@/components/ui/serchBar'
 import { useProducts } from '@/context/ProductsContext'
 import { AlertCircle, RefreshCw } from 'lucide-react'
 import { useEffect } from 'react'
-import { ProductCard } from '../components/ProductCard'
 import { useProductsActions } from '../hooks/useProductsActions'
 import { useProductsFilter } from '../hooks/useProductsFilter'
 import { useProductsStatus } from '../hooks/useProductsStatus'
+import { ProductCard } from './ProductCard'
 
 function ProductsPage() {
 	const { products, createdProducts } = useProducts()

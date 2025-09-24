@@ -1,10 +1,7 @@
-import { SITE_NAME } from '@/constants/seo-constants'
-import CreateProductPage from '@/pages/CreatesProductPage'
-import { Metadata } from 'next'
+'use client'
 
-export const metadata: Metadata = {
-	title: `Created-card | ${SITE_NAME}`
-}
+import CreateProductPage from '@/components/CreatesProductPage'
+
 export default function CreatedPage() {
 	return <CreateProductPage />
 }
