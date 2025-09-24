@@ -5,7 +5,7 @@ Products-SPA - приложение на Next/TypeScript, Tailwind/ShadcnUI с C
 публичного API DummyJSON, пользовательские товары создаются локально и хранятся
 в Context.
 
-Демо (Vercel): https://products-f9xgtd72a-dianniiis-projects.vercel.app/
+Демо (Vercel): https://products-spa-ten.vercel.app/
 
 ## ✨ Функционал
 
